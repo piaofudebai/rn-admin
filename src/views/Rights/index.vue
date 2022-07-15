@@ -14,10 +14,9 @@
         <el-table-column label="路径" prop="path"> </el-table-column>
         <el-table-column label="权限等级" prop="level">
           <template v-slot="scope">
-            <el-tag
-              :type="tagList[scope.row.level].type"
-              >{{tagList[scope.row.level].label}}</el-tag
-            >
+            <el-tag :type="tagList[scope.row.level].type">{{
+              tagList[scope.row.level].label
+            }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -33,7 +32,8 @@ export default {
       const res = await getrightsList('list')
       // console.log(res)
       this.list = res.data.data
-      // console.log(this.list)
+      console.log(this.list)
+      this.$store.commit('setrights', res.data.data)
     } catch (err) {
       console.log(err)
     }

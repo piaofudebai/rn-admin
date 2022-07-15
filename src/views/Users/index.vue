@@ -162,7 +162,7 @@ export default {
   created () {
     this.getUserList()
     // console.log(this.rolename.id)
-    this.getroleList()
+    // this.getroleList()
   },
   data () {
     return {

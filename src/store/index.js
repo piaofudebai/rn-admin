@@ -11,7 +11,8 @@ export default new Vuex.Store({
     user: {},
     rolename: [],
     goodsList: [],
-    options: []
+    options: [],
+    rights: []
   },
   getters: {
   },
@@ -27,6 +28,9 @@ export default new Vuex.Store({
     },
     setoptions (state, payload) {
       state.options = payload
+    },
+    setrights (state, payload) {
+      state.rights = payload
     }
   },
   actions: {

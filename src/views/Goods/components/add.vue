@@ -18,7 +18,11 @@
         <el-step title="完成"></el-step>
       </el-steps>
       <el-form>
-        <el-tabs :tab-position="tabPosition" style="height: 2000px">
+        <el-tabs
+          :tab-position="tabPosition"
+          @tab-click="change"
+          style="height: 2000px"
+        >
           <!-- 基本信息 -->
           <el-tab-pane label="基本信息">
             <el-form
@@ -94,9 +98,6 @@
             <el-upload
               class="upload-demo"
               action="https://jsonplaceholder.typicode.com/posts/"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :file-list="fileList"
               list-type="picture"
             >
               <el-button size="small" type="primary">点击上传</el-button>
@@ -105,8 +106,11 @@
               </div>
             </el-upload>
           </el-tab-pane>
-          <!-- 商品内容 -->
-          <el-tab-pane label="商品内容">定时任务补偿</el-tab-pane>
+          <!-- 商品内容-富文本编辑 -->
+          <el-tab-pane label="商品内容">
+            <vue-editor v-model="content" />
+            <el-button type="primary" @click="addgoods">添加商品</el-button>
+          </el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
@@ -115,7 +119,8 @@
 </template>
 
 <script>
-import { categoriesGoods, getAttributes } from '@/api/goods'
+import { VueEditor } from 'vue2-editor'
+import { categoriesGoods, getAttributes, addgoods } from '@/api/goods'
 import { mapState } from 'vuex'
 export default {
   created () {
@@ -126,6 +131,7 @@ export default {
   data () {
     return {
       // isactiveShow: false, // 弹框
+      content: '<h1>Some initial content</h1>',
       value: '',
       active: 0,
       tabPosition: 'left', // 侧边左侧显示
@@ -163,8 +169,8 @@ export default {
     }
   },
   methods: {
-    next () {
-      if (this.active++ > 2) this.active = 0
+    change (el) {
+      this.active = el.index * 1
     },
     // 分类数据
     async categoriesGoods () {
@@ -204,20 +210,33 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    // 添加商品
+    async addgoods () {
+      try {
+        const res = await addgoods({
+          ...this.ruleForm
+        })
+        console.log(res)
+      } catch (err) {
+        console.log(err)
+      }
     }
-
   },
   computed: {
     ...mapState(['goodsList'])
   },
   watch: {},
   filters: {},
-  components: {}
+  components: { VueEditor }
 }
 </script>
 
 <style scoped lang='less'>
 .el-breadcrumb {
   margin-bottom: 15px;
+}
+.el-steps {
+  margin-bottom: 20px;
 }
 </style>

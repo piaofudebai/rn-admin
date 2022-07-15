@@ -40,7 +40,7 @@
                         closable
                         v-for="item3 in item2.children"
                         :key="item3.id"
-                        @close="handleClose(tag)"
+                        @close="handleClose(scope.row.id, item3.id)"
                         >{{ item3.authName }}</el-tag
                       >
                     </div></el-col
@@ -89,6 +89,7 @@
         :data="dataList"
         show-checkbox
         node-key="id"
+        @check-change="nodeclick"
         default-expand-all
         :default-checked-keys="[5]"
         :props="defaultProps"
@@ -97,11 +98,11 @@
       <div class="btn-footer">
         <span>
           <el-button>取消</el-button>
-          <el-button type="primary">确定</el-button>
+          <el-button type="primary" @click="autorbtn">确定</el-button>
         </span>
       </div>
     </el-dialog>
-    <!--  -->
+    <!-- 删除分类 -->
     <el-dialog title="提示" :visible.sync="istagShow" width="30%">
       <i class="el-icon-warning"></i>
       <span>此操作将永久删除该分类, 是否继续?</span>
@@ -114,7 +115,7 @@
 </template>
 
 <script>
-import { getRoles, getrightsTree } from '@/api/roles'
+import { getRoles, getrightsTree, delrights, autorrights } from '@/api/roles'
 export default {
   created () {
     this.getRoles()
@@ -125,12 +126,16 @@ export default {
       roleList: [], // 总数据
       isRoleShow: false,
       istagShow: false,
+      rolesId: 0, // 角色id
+      rightId: 0, // 权限id
       tag: '',
       dataList: [], // 树形控件数据
       defaultProps: {
         children: 'children',
         label: 'authName'
-      }
+      },
+      autorList: [],
+      autorId: ''
     }
   },
   methods: {
@@ -145,15 +150,29 @@ export default {
         console.log(err)
       }
     },
-    RoleShow () {
+    RoleShow (row) {
       this.isRoleShow = true
+      this.rolesId = row.id
     },
-    handleClose (tag) {
+    handleClose (roleId, rightId) {
       this.istagShow = true
-      this.tag = tag
+      // this.tag = tag
+      console.log(roleId, rightId)
+      this.rolesId = roleId
+      this.rightId = rightId
     },
-    tagShow () {
-
+    async tagShow () {
+      try {
+        const res = await delrights({
+          roleId: this.rolesId,
+          rightId: this.rightId
+        })
+        console.log(res)
+        this.istagShow = false
+        this.getRoles()
+      } catch (err) {
+        console.log(err)
+      }
     },
 
     async getrightsTree () {
@@ -165,9 +184,34 @@ export default {
       } catch (err) {
         console.log(err)
       }
+    },
+    nodeclick (data) {
+      // console.log(data)
+      this.autorList.push(data)
+      // console.log(this.autorList)
+      const arr = []
+      this.autorList.forEach(item =>
+        arr.push(item.id)
+      )
+      // console.log(this.autorId)
+
+      this.autorId = arr.join(',')
+      console.log(this.autorId)
+    },
+    async autorbtn () {
+      try {
+        const res = await autorrights({
+          roleId: this.rolesId,
+          rids: this.autorId
+        })
+        console.log(res)
+      } catch (err) {
+        console.log(err)
+      }
     }
   },
-  computed: {},
+  computed: {
+  },
   watch: {},
   filters: {},
   components: {}

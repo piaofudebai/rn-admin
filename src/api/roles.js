@@ -38,3 +38,29 @@ export const getrightsTree = (
     url: `rights/${tree}`
   })
 }
+
+/*
+*  删除角色指定权限
+
+ */
+export const delrights = (
+  { roleId, rightId }
+) => {
+  return request({
+    method: 'DELETE',
+    url: `roles/${roleId}/rights/${rightId}`
+  })
+}
+/*
+*  角色授权
+
+ */
+export const autorrights = (
+  data
+) => {
+  return request({
+    method: 'POST',
+    url: `roles/${data.roleId}/rights`,
+    data
+  })
+}

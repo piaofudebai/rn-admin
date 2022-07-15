@@ -37,3 +37,15 @@ export const getAttributes = (
     url: `categories/${id}/attributes?sel=${sel}`
   })
 }
+/*
+*添加商品
+*/
+export const addgoods = (
+  data
+) => {
+  return request({
+    method: 'GET',
+    url: 'goods',
+    data
+  })
+}
