@@ -73,6 +73,19 @@
         >
       </span>
     </el-dialog>
+    <!-- 实现分页效果 -->
+    <div class="block">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pagenum"
+        :page-sizes="[1, 5, 10, 20]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 
@@ -86,11 +99,12 @@ export default {
   data () {
     return {
       value: [],
+      total: null, // 总条数
       cityOptions: cityOptions,
       city: '',
       ordersText: '',
       pagenum: 1,
-      pagesize: 20,
+      pagesize: 5,
       ordersList: [],
       isordersShow: false,
       tagList: [
@@ -109,10 +123,23 @@ export default {
           pagesize: this.pagesize
         })
         this.ordersList = res.data.data.goods
+        this.total = res.data.data.total
         console.log(res)
       } catch (err) {
         console.log(err)
       }
+    },
+    //* 分页效果√
+    handleSizeChange (val) {
+      // console.log(`每页 ${val} 条`)
+      this.pagesize = val
+      this.getOrders()
+    },
+    //* 获取当前页√
+    handleCurrentChange (val) {
+      // console.log(`当前页: ${val}`)
+      this.pagenum = val
+      this.getOrders()
     }
   },
   computed: {},

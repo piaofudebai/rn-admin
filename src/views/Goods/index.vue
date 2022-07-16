@@ -95,7 +95,7 @@ export default {
   data () {
     return {
       pagenum: 1, // 页数
-      pagesize: 20, // 条数
+      pagesize: 5, // 条数
       total: null, // 总条数
       goodsList: [], // 商品列表数据
       searchgoodstext: '' // 搜索框文字
@@ -111,6 +111,7 @@ export default {
         })
         // console.log(res)
         this.goodsList = res.data.data.goods
+        this.total = res.data.data.total
         this.$store.commit('setgoodsList', res.data.data.goods)
         // console.log(this.goodsList)
       } catch (err) {

@@ -144,7 +144,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pagenum"
-        :page-sizes="[2, 4, 6, 8]"
+        :page-sizes="[1, 5, 10, 20]"
         :page-size="pagesize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -170,7 +170,7 @@ export default {
       searchtext: '',
       queryInfo: '',
       pagenum: 1, // 当前页码
-      pagesize: 20, // 每页显示条数
+      pagesize: 5, // 每页显示条数
       total: null, // 总条数
       userList: [], // 用户数据列表
       dialogVisible: false, // 编辑弹层
@@ -226,6 +226,7 @@ export default {
         })
         // console.log(res)
         this.userList = res.data.data.users
+        this.total = res.data.data.total
         console.log(this.userList)
       } catch (err) {
         console.log(err)

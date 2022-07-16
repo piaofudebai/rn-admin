@@ -44,7 +44,7 @@ export const addgoods = (
   data
 ) => {
   return request({
-    method: 'GET',
+    method: 'POST',
     url: 'goods',
     data
   })

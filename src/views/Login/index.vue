@@ -32,7 +32,7 @@ export default {
       loginForm: {
         // 字段名都是和接口文档保持一致
         username: 'admin',
-        password: 123456
+        password: '123456'
       },
       rules: {
         username: [

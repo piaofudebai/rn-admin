@@ -58,10 +58,12 @@
               <el-form-item label="商品分类" prop="goods_cat">
                 <el-cascader
                   :options="options"
-                  v-model="value"
+                  v-model="cat_id"
+                  @change="handleChange"
                   :props="{
                     expandTrigger: 'hover',
                     label: 'cat_name',
+                    value: 'cat_id',
                   }"
                 >
                 </el-cascader>
@@ -89,7 +91,7 @@
                 :key="item.attr_id"
                 :label="item.attr_name"
               >
-                <el-input></el-input>
+                <el-input v-model="item.attr_vals"></el-input>
               </el-form-item>
             </el-form>
           </el-tab-pane>
@@ -97,13 +99,11 @@
           <el-tab-pane label="商品图片">
             <el-upload
               class="upload-demo"
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action="http://liufusong.top:8899/api/private/v1/upload"
               list-type="picture"
+              :on-success="onSuccess"
             >
               <el-button size="small" type="primary">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">
-                只能上传jpg/png文件，且不超过500kb
-              </div>
             </el-upload>
           </el-tab-pane>
           <!-- 商品内容-富文本编辑 -->
@@ -131,7 +131,8 @@ export default {
   data () {
     return {
       // isactiveShow: false, // 弹框
-      content: '<h1>Some initial content</h1>',
+      content: '<h1></h1>',
+      cat_id: [],
       value: '',
       active: 0,
       tabPosition: 'left', // 侧边左侧显示
@@ -165,7 +166,8 @@ export default {
       },
       options: [], // 分类食物
       AttributesList: [], // 商品参数
-      AttrdataList: [] // 商品属性
+      AttrdataList: [], // 商品属性,
+      values: ''
     }
   },
   methods: {
@@ -206,18 +208,26 @@ export default {
         })
         // console.log(res)
         this.AttrdataList = res.data.data
-        console.log(this.AttrdataList)
+        // console.log(this.AttrdataList)
       } catch (err) {
         console.log(err)
       }
     },
+    onSuccess (file, fileList) {
+      console.log(fileList)
+    },
+    handleChange (value) {
+      this.values = value.join(',')
+    },
     // 添加商品
     async addgoods () {
+      console.log(this.ruleForm)
+      this.ruleForm.goods_cat = this.values
       try {
-        const res = await addgoods({
+        await addgoods({
           ...this.ruleForm
         })
-        console.log(res)
+        // console.log(res)
       } catch (err) {
         console.log(err)
       }
